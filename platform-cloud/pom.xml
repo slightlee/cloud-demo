@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.slightlee</groupId>
+    <artifactId>platform-cloud</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>product-server</module>
+        <module>user-server</module>
+    </modules>
+
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <!-- platform 版本 -->
+        <platform.version>1.0-SNAPSHOT</platform.version>
+        <!-- platform-tool 版本 -->
+        <platform-tool.version>1.0-SNAPSHOT</platform-tool.version>
+        <!-- SpringBoot版本号 -->
+        <spring-boot.version>2.4.2</spring-boot.version>
+        <!-- SpringCloud版本号 -->
+        <spring-cloud.version>2020.0.3</spring-cloud.version>
+        <!-- SpringCloudAlibaba 版本号 -->
+        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
+        <!-- Knife4j Swagger2文档 -->
+        <knife4j.version>2.0.8</knife4j.version>
+
+    </properties>
+
+
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- spring boot 依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- spring cloud 依赖 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- spring cloud alibaba 依赖 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>

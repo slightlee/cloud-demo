@@ -1,0 +1,52 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: user-server
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/cloud-demo?serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    hikari:
+      connection-timeout: 60000
+      validation-timeout: 3000
+      idle-timeout: 60000
+      login-timeout: 5
+      max-lifetime: 60000
+      maximum-pool-size: 10
+      minimum-idle: 10
+      read-only: false
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:**/mapper/xml/*.xml
+
+
+platform:
+  swagger:
+    title: 用户服务接口文档
+    version: 1.0
+    termsOfServiceUrl: http://localhost:8002/
+    description: 用户服务接口文档
+    basePackage:
+    name: 明天
+    url: www.xxx.com
+    email: lmm_@163.com
+
+knife4j:
+  enable: true       # 开启增强功能
+  production: false  # 是否生产环境 如果为true停用Knife4j文档
+  basic:
+    enable: false     # 开启Swagger的Basic认证功能,默认是false
+    username: test   # Basic认证用户名
+    password: test   # Basic认证密码
+  setting:  # 自定义footer 版本 >=3.0.2
+    enableFooter: false    # 禁用默认 footer显示
+    enableFooterCustom: true  # 自定义footer
+    # 自定义显示内容
+    footerCustomContent: © 2021-[slightlee](https://slightlee.com/)
