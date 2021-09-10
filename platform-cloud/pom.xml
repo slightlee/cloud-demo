@@ -13,6 +13,7 @@
     <modules>
         <module>product-server</module>
         <module>user-server</module>
+        <module>order-server</module>
     </modules>
 
 

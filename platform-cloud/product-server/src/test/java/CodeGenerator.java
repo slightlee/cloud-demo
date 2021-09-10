@@ -42,7 +42,7 @@ public class CodeGenerator {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath +"/platform-cloud/user-server"+ "/src/main/java");
+        gc.setOutputDir(projectPath +"/platform-cloud/order-server"+ "/src/main/java");
         gc.setAuthor("明天");
         gc.setOpen(false);      //生成后是否打开资源管理器
         gc.setFileOverride(false); //重新生成时文件是否覆盖
@@ -68,7 +68,7 @@ public class CodeGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName("user");
+        pc.setModuleName("order");
         pc.setParent("com.slightlee");
         mpg.setPackageInfo(pc);
 
