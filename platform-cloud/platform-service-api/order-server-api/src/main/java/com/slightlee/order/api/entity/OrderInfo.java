@@ -1,4 +1,4 @@
-package com.slightlee.order.entity;
+package com.slightlee.order.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
