@@ -11,9 +11,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>product-server</module>
-        <module>user-server</module>
-        <module>order-server</module>
+        <module>platform-service</module>
+        <module>platform-service-api</module>
     </modules>
 
 
