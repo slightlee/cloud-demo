@@ -24,6 +24,12 @@
             <version>${platform.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.slightlee</groupId>
+            <artifactId>order-server-api</artifactId>
+            <version>${platform.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

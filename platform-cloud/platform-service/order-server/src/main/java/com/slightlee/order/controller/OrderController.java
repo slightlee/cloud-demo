@@ -46,11 +46,12 @@ public class OrderController {
     }
 
     @ApiOperation(value = "用户订单信息列表")
-    @ApiOperationSupport(order = 1,author = "明天")
+    @ApiOperationSupport(order = 2,author = "明天")
     @RequestMapping(value = "/getOrderInfobyId",method = RequestMethod.GET)
-    public OrderInfo getOrderInfobyId(@ApiParam(name = "userId", value = "用户ID", required = true) @RequestParam(value = "userId") Long userId){
-        return orderService.list(new LambdaQueryWrapper<OrderInfo>().eq(OrderInfo::getUserId,userId)).get(0);
+    public List<OrderInfo> getOrderInfobyId(@ApiParam(name = "userId", value = "用户ID", required = true) @RequestParam(value = "userId") Long userId){
+        return orderService.list(new LambdaQueryWrapper<OrderInfo>().eq(OrderInfo::getUserId,userId));
     }
+
 
 }
 
