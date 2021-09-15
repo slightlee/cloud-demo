@@ -26,10 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * <p>
@@ -65,17 +63,13 @@ public class UserController {
     @RequestMapping(value = "/getOrderInfoList",method = RequestMethod.GET)
     public List<OrderInfo> getOrderInfoList(@ApiParam(name = "userId", value = "用户ID", required = true) @RequestParam(value = "userId") Long userId){
 
-        // 方式一、
-        RestTemplate restTemplate = new RestTemplate();
-        Map map = restTemplate.getForObject("http://127.0.0.1:8003/order/getOrderInfobyId?userId=" + userId, Map.class);
+        String url = "";
+        List<String> urlList = Arrays.asList("http://127.0.0.1:8003", "http://127.0.0.1:8004");
+        int i = ThreadLocalRandom.current().nextInt(urlList.size());
+        url = urlList.get(i);
+        Map map = restTemplates.getForObject(url + "/order/getOrderInfobyId?userId=" + userId, Map.class);
         List<OrderInfo> list = (List<OrderInfo>) map.get("data");
-        log.info("方式1: {}",list.toString());
-
-        // 方式二、
-        Map map2 = restTemplates.getForObject("http://127.0.0.1:8003/order/getOrderInfobyId?userId=" + userId, Map.class);
-        List<OrderInfo> list2 = (List<OrderInfo>) map2.get("data");
-        log.info("方式2: {}",list2.toString());
-
+        log.info("请求url为:{},结果: {}",url,list.toString());
         return list;
 
     }
