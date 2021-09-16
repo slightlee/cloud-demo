@@ -1,7 +1,6 @@
 package com.slightlee.user.controller;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.slightlee.base.annotation.ResponseResult;
@@ -14,11 +13,8 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -50,6 +47,9 @@ public class UserController {
 
     private final RestTemplate restTemplates;
 
+    private final DiscoveryClient discoveryClient;
+
+
     @ApiOperation(value = "用户列表")
     @ApiOperationSupport(order = 1,author = "明天")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
@@ -63,16 +63,18 @@ public class UserController {
     @RequestMapping(value = "/getOrderInfoList",method = RequestMethod.GET)
     public List<OrderInfo> getOrderInfoList(@ApiParam(name = "userId", value = "用户ID", required = true) @RequestParam(value = "userId") Long userId){
 
-        String url = "";
-        List<String> urlList = Arrays.asList("http://127.0.0.1:8003", "http://127.0.0.1:8004");
-        int i = ThreadLocalRandom.current().nextInt(urlList.size());
-        url = urlList.get(i);
-        Map map = restTemplates.getForObject(url + "/order/getOrderInfobyId?userId=" + userId, Map.class);
-        List<OrderInfo> list = (List<OrderInfo>) map.get("data");
-        log.info("请求url为:{},结果: {}",url,list.toString());
-        return list;
+        List<ServiceInstance> instances = discoveryClient.getInstances("order-server");
+        List<String> urls = instances.stream()
+                .map(serviceInstance -> serviceInstance.getUri().toString() + "/order/getOrderInfobyId?userId=" + userId)
+                .collect(Collectors.toList());
 
+        int i = ThreadLocalRandom.current().nextInt(urls.size());
+        Map map = restTemplates.getForObject(urls.get(i),Map.class);
+        List<OrderInfo> list = (List<OrderInfo>) map.get("data");
+        log.info("请求url为:{},结果: {}",urls.get(i),list.toString());
+        return list;
     }
+
 
 }
 
