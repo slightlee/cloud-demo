@@ -3,6 +3,7 @@ package com.slightlee.user.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.google.gson.Gson;
 import com.slightlee.base.annotation.ResponseResult;
 import com.slightlee.order.api.entity.OrderInfo;
 import com.slightlee.user.api.entity.User;
@@ -10,21 +11,15 @@ import com.slightlee.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -45,10 +40,7 @@ public class UserController {
 
     private final UserService userService;
 
-    private final RestTemplate restTemplates;
-
-    private final DiscoveryClient discoveryClient;
-
+    private final RestTemplate restTemplate;
 
     @ApiOperation(value = "用户列表")
     @ApiOperationSupport(order = 1,author = "明天")
@@ -59,22 +51,30 @@ public class UserController {
 
 
     @ApiOperation(value = "订单信息")
-    @ApiOperationSupport(order = 1,author = "明天")
+    @ApiOperationSupport(order = 2,author = "明天")
     @RequestMapping(value = "/getOrderInfoList",method = RequestMethod.GET)
-    public List<OrderInfo> getOrderInfoList(@ApiParam(name = "userId", value = "用户ID", required = true) @RequestParam(value = "userId") Long userId){
+        public List<OrderInfo> getOrderInfoList(@ApiParam(name = "userId", value = "用户ID", required = true) @RequestParam(value = "userId") Long userId){
+        String obj = restTemplate.getForObject("http://order-server/order/getOrderInfobyId?userId=" + userId, String.class);
 
-        List<ServiceInstance> instances = discoveryClient.getInstances("order-server");
-        List<String> urls = instances.stream()
-                .map(serviceInstance -> serviceInstance.getUri().toString() + "/order/getOrderInfobyId?userId=" + userId)
-                .collect(Collectors.toList());
+        // 基于 fastjson
+//        JSONObject jsonObject = JSONObject.parseObject(obj);
+//        List<OrderInfo> orderInfoList = (List<OrderInfo>)jsonObject.get("data");
 
-        int i = ThreadLocalRandom.current().nextInt(urls.size());
-        Map map = restTemplates.getForObject(urls.get(i),Map.class);
-        List<OrderInfo> list = (List<OrderInfo>) map.get("data");
-        log.info("请求url为:{},结果: {}",urls.get(i),list.toString());
-        return list;
+        // 基于 gson
+        Gson gson = new Gson();
+        Result result = gson.fromJson(obj, Result.class);
+        List<OrderInfo> orderInfoList = (List<OrderInfo>)result.getData();
+        log.info("请求url为:{},结果: {}",null,orderInfoList);
+
+        return orderInfoList;
     }
 
+    @Data
+    class Result<T>{
+        private Integer code;
+        private String msg;
+        private T data;
+    }
 
 }
 

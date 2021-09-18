@@ -11,7 +11,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,9 +36,13 @@ import java.util.List;
 @RequestMapping("/order")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ResponseResult
+@Slf4j
 public class OrderController {
 
     private final OrderService orderService;
+
+    @Value("${server.port}")
+    private String port;
 
     @ApiOperation(value = "订单列表")
     @ApiOperationSupport(order = 1,author = "明天")
@@ -49,6 +55,7 @@ public class OrderController {
     @ApiOperationSupport(order = 2,author = "明天")
     @RequestMapping(value = "/getOrderInfobyId",method = RequestMethod.GET)
     public List<OrderInfo> getOrderInfobyId(@ApiParam(name = "userId", value = "用户ID", required = true) @RequestParam(value = "userId") Long userId){
+        log.info("被请求了:{}",port);
         return orderService.list(new LambdaQueryWrapper<OrderInfo>().eq(OrderInfo::getUserId,userId));
     }
 
